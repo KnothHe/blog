@@ -1,7 +1,9 @@
 // Custom styles.
 $body-background-color = #182430
+
 body {
-  background: $body-background-color;
+  color: white
+  background: $body-background-color
   font-size: 16px;
 }
 
@@ -50,4 +52,16 @@ a:link, a:visited {
     text-decoration: underline
     text-decoration-color: #1da1f2
   }
+}
+
+.posts-collapse::after {
+    background: grey
+}
+
+.posts-collapse .post-title a, .posts-collapse .post-title span.exturl {
+    color: white;
+}
+
+.site-nav {
+  background: $body-background-color
 }
