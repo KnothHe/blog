@@ -6,9 +6,9 @@ npm install hexo-asset-image --save
 npm install hexo-generator-fedd -save # RSS
 ```
 
-# Theme custom files
+# Next theme custom files
 
 ```text
-themes/_config.yml
-themes/sources/css/_custom/custom.styl
+themes/next/_config.yml
+themes/next/sources/css/_custom/custom.styl
 ```
