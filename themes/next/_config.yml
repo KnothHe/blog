@@ -175,12 +175,12 @@ site_state: true
 # Key is the link label showing to end users.
 # Value before `||` delimeter is the target permalink.
 # Value after `||` delimeter is the name of FontAwesome icon. If icon (with or without delimeter) is not specified, globe icon will be loaded.
-#social:
-  #GitHub: https://github.com/yourname || github
-  #E-Mail: mailto:yourname@gmail.com || envelope
+social:
+  GitHub: https://github.com/knothhe || github
+  E-Mail: mailto:guanglaihe@gmail.com || envelope
   #Weibo: https://weibo.com/yourname || weibo
   #Google: https://plus.google.com/yourname || google
-  #Twitter: https://twitter.com/yourname || twitter
+  Twitter: https://twitter.com/GuanglaiHe || twitter
   #FB Page: https://www.facebook.com/yourname || facebook
   #VK Group: https://vk.com/yourname || vk
   #StackOverflow: https://stackoverflow.com/yourname || stack-overflow
@@ -197,7 +197,7 @@ social_icons:
 # Usage: `permalink || title`
 # Value before `||` delimeter is the target permalink.
 # Value after `||` delimeter is the title and aria-label name.
-#github_banner: https://github.com/yourname || Follow me on GitHub
+github_banner: https://github.com/knothhe || Follow me on GitHub
 
 # Blog rolls
 links_icon: link
