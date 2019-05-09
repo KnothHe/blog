@@ -22,7 +22,7 @@ char* strcat(const char* a, const char* b)
 
 大致上的思路是先计算出 a 和 b 的长度，然后根据 a 和 b 的长度计算出需要分配给返回的字符串的内存空间的大小，最后将 a 和 b 的内容依次拷贝到返回字符串中。
 
-代码如下：
+代码：
 
 ```c
 #include <stdio.h>
@@ -71,7 +71,7 @@ int main(void)
 
 这个是对链表操作的基础的考察。
 
-代码如下：
+代码：
 
 ```c
 #include <stdio.h>
@@ -141,13 +141,42 @@ int main(void)
 
 在上述代码写完之后，我想到的是如果可以使用栈的话，只要先将所有节点压入栈，在弹出节点指针的过程中，先将第一个出栈的节点记录为头节点，之后依次链接，最后一个节点链接 `NULL`，这样程序的逻辑就会更加简单，缺点就是引入了额外的数据结构。
 
-当然，上述的递归代码也是隐式地使用了函数调用栈。总的来说，我的考虑中链表逆序是必须要使用到栈的。
+当然，上述的递归代码也是隐式地使用了函数调用栈。
+
+如果使用三个指针的话，就可以不适用栈完成链表逆序。
+
+代码：
+
+```c
+Node* reverse(Node* head)
+{
+    Node* p = head, *n, *nt;
+    if (p != NULL) {
+        n = p->next;
+    } 
+    if (n != NULL) {
+        nt = n->next;
+    }
+    p->next = NULL;
+    while (n != NULL) {
+        n->next = p;
+        p = n;
+        n = nt;
+        if (n != NULL) {
+            nt = n->next;
+        }
+    }
+    return p;
+}
+```
 
 ## 快速排序
 
 这道题就是我觉得不应该出现在面试题中的题目。快排的话，会和不会都是在笔试之前就已经确定了的，并且并不太能体现处应试者的编程（算法）水平。毕竟，没有多少人会没事写个快排。
 
-虽说如此，还是写了。代码如下：
+虽说如此，还是写了。
+
+代码：
 
 ```cpp
 #include <algorithm>
@@ -228,13 +257,13 @@ int main(void)
 
 没有考虑到的是需要将 `A B C` 三个柱子看作三个区域，目标是将整个汉诺塔依照要求从 `A` 移动到 `C`。这就需要考虑每一步移动时将 `A B C` 分别看作是 `源(from)`、`缓冲区(buffer)` 和 `目的(to)`。这部分参考 [wiki](https://zh.wikipedia.org/zh-hans/%E6%B1%89%E8%AF%BA%E5%A1%94#%E9%81%9E%E8%BF%B4%E8%A7%A3)。
 
-思路如下：
+思路：
 
 1. 递归将 `N-1` 从 `from` 以 `to` 为缓冲区移动到 `buffer`
 2. 将 `N` 从 `from` 移动到 `to`
 3. 递归将 `N-1` 从 `buffer` 以 `from` 为缓冲区移动到 `to`
 
-关键代码如下：
+关键代码：
 
 ```c
 helper(N-1, from, to, buffer);
@@ -242,7 +271,7 @@ printf("Move disk %d from %c to %c\n", N, from, to);
 helper(N-1, buffer, from, to);
 ```
 
-完整代码如下：
+完整代码：
 
 ```c
 #include <stdio.h>
