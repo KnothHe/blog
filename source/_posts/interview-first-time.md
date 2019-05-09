@@ -150,23 +150,18 @@ int main(void)
 ```c
 Node* reverse(Node* head)
 {
-    Node* p = head, *n, *nt;
-    if (p != NULL) {
-        n = p->next;
-    } 
-    if (n != NULL) {
-        nt = n->next;
+    Node* prev = NULL, *cur = head, *next = NULL;
+    if (cur != NULL) {
+        next = cur->next;
     }
-    p->next = NULL;
-    while (n != NULL) {
-        n->next = p;
-        p = n;
-        n = nt;
-        if (n != NULL) {
-            nt = n->next;
-        }
+    while (next != NULL) {
+        cur->next = prev;
+        prev = cur;
+        cur = next;
+        next = next->next;
     }
-    return p;
+    cur->next = prev;
+    return cur;
 }
 ```
 
