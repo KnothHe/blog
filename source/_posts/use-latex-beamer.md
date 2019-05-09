@@ -5,6 +5,8 @@ update: 2019-04-13 20:25:25
 tags:
     -  LaTeX
     -  Beamer
+categories: 
+    - Summary
 ---
 
 今天用了 Beamer 做一个 Presentation，虽然之前已经尝试过，但是有一些细节的部分忘记了，又花了一点时间在查找各种细节。 Presentation 的初稿现在算是基本弄好了。于是决定把折腾得到的结果记录一下。

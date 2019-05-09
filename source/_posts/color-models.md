@@ -4,6 +4,8 @@ date: 2019-04-17 16:44:28
 update: 2019-04-17 16:44:28
 tags:
     - Translation
+categories: 
+    - Introduction
 ---
 
 这篇博客是从一个计算机图形学的教程的 [common concept](https://gabrielgambetta.com/computer-graphics-from-scratch/common-concepts.html) 中的 color models 小节翻译过来的。我觉得原文的内容对颜色模式的解释详细易懂，就想着以练习翻译的方式翻译了过来。
