@@ -9,9 +9,11 @@ categories:
     - Summary
 ---
 
-今天用了 Beamer 做一个 Presentation，虽然之前已经尝试过，但是有一些细节的部分忘记了，又花了一点时间在查找各种细节。 Presentation 的初稿现在算是基本弄好了。于是决定把折腾得到的结果记录一下。
+今天用了 Beamer 做一个 Presentation，花了一点时间在查找各种细节。 Presentation 已经基本完成。于是决定把折腾得到的结果记录一下。
 
 以下均是一个 `LaTeX` 门外汉的个人见解，也只是知其然而不知其所以然罢了。
+
+最终的 [Presentation](https://github.com/KnothHe/Markup-Files/blob/master/beamer/c51-beamer.tex)
 
 <!-- more -->
 
@@ -19,7 +21,7 @@ categories:
 
 可以添加一些作者，日期之类的信息。
 
-```latex
+```tex
 \title{..}
 \author{...}
 \data{...}
@@ -28,7 +30,7 @@ categories:
 
 ## 标题页
 
-```latex
+```tex
 \begin{frame}
     \titlepage
 \end{frame}
@@ -36,34 +38,43 @@ categories:
 
 ## 生成 ToC
 
-```latex
+```tex
 \begin{frame}{Table of Contents}
     \tableofcontents
 \end{frame}
 ```
 
-## frame 标题
+## Frame 标题
 
 在 `frame` 后加上 `{title}` 就行了。建议每个 `frame` 都加上一个标题。
 
-```latex
+```tex
 \begin{frame}{Title of This Frame}
 \end{frame}
 ```
 
 ## 中文显示
 
-这个问题在我刚开始使用 `LaTeX` 是还是挺犯难的，用的时间较长了，加上这么多年来 `LaTeX` 的发展，虽然在我刚开始学习时， LaTeX 对非西文字体的支持就已经发展的相当的好了，解决方法已经变得相当的简单了。
+这个问题在我刚开始使用 `LaTeX` 是还是挺犯难的，用的时间较长了，加上多年来 `LaTeX` 的发展， LaTeX 对非西文字体的支持已经发展的相对友好，解决方法已经变得相当的简单。
 
-最简单的解决方法就是在开头加上 `\usepackage{CJK}`。
+简单的解决方法就是使用 xeCJK，并配置中文字体。参考 [为 MacTeX 配置中文支持](https://liam.page/2014/11/02/latex-mactex-chinese-support/)
 
-并且对于中文等非西文字体的 `.tex` 源文件编译时，最好是采用 `XeLaTeX`， 毕竟原本 `XeTeX/XeLaTeX` 原本的设计目的就是增强对非西文字体的支持。
+```tex
+\usepackage{xeCJK}
+\setCJKmainfont[BoldFont=STZhongsong, ItalicFont=STKaiti]{STSong}
+\setCJKsansfont[BoldFont=STHeiti]{STXihei}
+\setCJKmonofont{STFangsong}
+```
+
+中文字体可简单使用 `\usepackage{ctex}`
+
+并且对于中文等非西文字体的 `.tex` 源文件编译时，优先采用 `XeLaTeX`。毕竟原本 `XeTeX/XeLaTeX` 原本的设计目的就是增强对非西文字体的支持。
 
 ## Beamer 主题
 
-我比较喜欢的主题时 `CambridgeUS`
+我比较喜欢的主题是 `CambridgeUS`
 
-```latex
+```tex
 \usetheme{CambridgeUS}
 ```
 
@@ -71,11 +82,11 @@ categories:
 
 当然，在主题之上还可以修改 `colortheme` 之类的。我挺喜欢正在使用的主题的默认的 `colortheme` 的，也就没改。
 
-## 分章节
+## 划分章节
 
-和普通的 `LaTeX` 文档类似，可以为 `Beamer` 添加章节信息。章节信息最后会生成目录。
+和普通的 `LaTeX` 文档类似，可以为 `Beamer` 添加章节信息。章节信息最后会用于生成目录。
 
-```latex
+```tex
 \section{...}
 \subsection{...}
 ```
@@ -87,7 +98,8 @@ categories:
 
 
 下面这一部分可定义也可不定义，参考（复制于） [WikiBooks](https://en.wikibooks.org/wiki/LaTeX/Source_Code_Listings)
-```latex
+
+```tex
 \usepackage{color}
 
 \definecolor{mygreen}{rgb}{0,0.6,0}
@@ -127,12 +139,12 @@ categories:
 
 就是在需要排版代码的 `frame` 后加上参数 `fragile`。
 
-```latex
+```tex
 \begin{frame}[fragile]
     \begin{lstlisting}[language=...]
-        ...
-        CODE
-        ...
+        % ...
+        % CODE
+        % ...
     \end{lstlisting}
 \end{frame}
 ```

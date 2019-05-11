@@ -1,14 +1,14 @@
 ---
 title: 初次笔试题
 date: 2019-05-09 10:57:00
-update: 2019-05-09 13:40:00
+update: 2019-05-11 13:40:00
 tags:
     - Interview
 categories: 
-    - Algorithm
+    - Summary
 ---
 
-昨天参加了学校的一个企业实习的宣讲会，结束后做了一套笔试题。原本在签到的时候我选择的应聘岗位是后端开发，但是在选择笔试试卷是还是选择了 C/C++ 开发。和编程相关的题目总共是 4 道题。现场做题的时候有很多的细节没有考虑到，而且我更习惯使用电脑写代码，没有多少在纸上写代码的经历，最后只写了 3 道，一道空白。我的感觉是这些面试题中有一道题并不适合笔试题这种场合。最重要的是很基础的题目我并没有能够做到 bug-free。我的算法的基础还需要继续巩固。特记录如下。
+昨天参加了学校的一个企业实习的宣讲会，结束后做了笔试题。签到时我选择的应聘岗位是后端开发，但是在选择笔试试卷是选择了 C/C++ 开发。和编程相关的题目总共是 4 道题。现场做题的时候有很多的细节没有考虑到，而且我更习惯使用电脑写代码，没有多少在纸上写代码的经历，最后只写了 3 道，一道空白。就个人感觉，这些笔试题中有一道题并不适合笔试。最后，最重要的是很基础的题目我并没有能够做到 bug-free。编程的基础还需要继续巩固。特记录如下。
 
 <!-- more -->
 
@@ -20,7 +20,7 @@ categories:
 char* strcat(const char* a, const char* b)
 ```
 
-大致上的思路是先计算出 a 和 b 的长度，然后根据 a 和 b 的长度计算出需要分配给返回的字符串的内存空间的大小，最后将 a 和 b 的内容依次拷贝到返回字符串中。
+大致的思路是先计算出 a 和 b 的长度，然后根据 a 和 b 的长度计算出需要分配给返回字符串的内存空间的大小，最后将 a 和 b 的内容依次拷贝到返回字符串中。
 
 代码：
 
@@ -65,8 +65,6 @@ int main(void)
 }
 ```
 
-最后在写的过程中发现 C 语言中对字符串的遍历操作还是指针比较方便。
-
 ## 链表逆序
 
 这个是对链表操作的基础的考察。
@@ -84,9 +82,39 @@ struct node {
 
 typedef struct node Node;
 
-void printLinkedList(Node* head)
+typedef struct {
+    Node* head;
+} LinkedList;
+
+Node* helper(Node* p)
 {
-    Node* p = head;
+    if (p != NULL) {
+        Node* n = p->next;
+        n = helper(n);
+        if (n != NULL) {
+            n->next = p;
+        }
+    }
+    return p;
+}
+
+void reverse(LinkedList* li)
+{
+    Node* head = li->head;
+    Node* h = head;
+    if (h != NULL) {
+        while (h->next != NULL) {
+            h = h->next;
+        }
+        Node* last = helper(head);
+        last->next = NULL;
+    }
+    li->head = h;
+}
+
+void printLinkedList(LinkedList* li)
+{
+    Node* p = li->head;
     while (p != NULL) {
         printf("%c", p->ch);
         p = p->next;
@@ -94,36 +122,14 @@ void printLinkedList(Node* head)
     printf("\n");
 }
 
-Node* helper(Node* p)
-{
-    if (p == NULL) return NULL;
-    Node* n = p->next;
-    n = helper(n);
-    if (n != NULL) {
-        n->next = p;
-    }
-    return p;
-}
-
-Node* reverse(Node* head)
-{
-    if (head == NULL) return NULL;
-    Node* h = head;
-    while (h->next != NULL) {
-        h = h->next;
-    }
-    Node* last = helper(head);
-    last->next = NULL;
-    return h;
-}
-
 int main(void)
 {
-    Node* head = malloc(sizeof(Node));
-    head->ch = 'a';
-    head->next = NULL;
+    LinkedList* li;
+    li->head = malloc(sizeof(Node));
+    li->head->ch = 'a';
+    li->head->next = NULL;
 
-    Node* p = head;
+    Node* p = li->head;
     for (int i = 1; i <= 3; i++) {
         Node* t = malloc(sizeof(Node));
         t->ch = 'a' + i;
@@ -131,10 +137,10 @@ int main(void)
         p->next = t;
         p = p->next;
     }
-    printLinkedList(head);
-    head = reverse(head);
-    printLinkedList(head);
-    
+    printLinkedList(li);
+    reverse(li);
+    printLinkedList(li);
+     
     return 0;
 }
 ```
@@ -143,14 +149,14 @@ int main(void)
 
 当然，上述的递归代码也是隐式地使用了函数调用栈。
 
-如果使用三个指针的话，就可以不适用栈完成链表逆序。
+如果使用三个指针的话，就可以不使用栈完成链表逆序。
 
 代码：
 
 ```c
-Node* reverse(Node* head)
+void reverse(LinkedList* li)
 {
-    Node* prev = NULL, *cur = head, *next = NULL;
+    Node* prev = NULL, *cur = li->head, *next = NULL;
     if (cur != NULL) {
         next = cur->next;
     }
@@ -161,7 +167,7 @@ Node* reverse(Node* head)
         next = next->next;
     }
     cur->next = prev;
-    return cur;
+    li->head = cur;
 }
 ```
 
@@ -244,7 +250,7 @@ int main(void)
 
 最初接触到这道题是我大二开始学习计算机算法最初接触递归的时候。再次碰到的时候只考虑到了移动次数，内心觉得移动序列可能比较麻烦，就没再考虑。笔试时也没有多加思考就放弃了。
 
-在回宿舍的路上大致想明白了思路（还有缺陷）：
+在回宿舍的路上大致想明白了思路：
 
 1. 递归打印 `N-1`
 2. 打印 `N`
