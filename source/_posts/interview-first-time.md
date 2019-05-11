@@ -14,7 +14,9 @@ categories:
 
 题目记录如下：
 
-## C 语言 `strcat` 的实现，和库函数 `strcat` 并不相同，声明如下：
+## C 语言 `strcat` 的实现
+
+和库函数 `strcat` 并不相同，声明如下：
 
 ```c
 char* strcat(const char* a, const char* b)
