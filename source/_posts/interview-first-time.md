@@ -1,7 +1,7 @@
 ---
 title: 初次笔试题
 date: 2019-05-09 10:57:00
-update: 2019-05-11 13:40:00
+updated: 2019-05-11 13:40:00
 tags:
     - Interview
 categories: 

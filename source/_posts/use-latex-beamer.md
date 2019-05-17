@@ -1,7 +1,7 @@
 ---
 title: LaTeX Beamer 使用
 date: 2019-04-13 20:25:25
-update: 2019-04-13 20:25:25
+updated: 2019-05-13 20:25:25
 tags:
     - LaTeX
     - Beamer
