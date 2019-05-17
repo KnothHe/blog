@@ -3,10 +3,10 @@ title: LaTeX Beamer 使用
 date: 2019-04-13 20:25:25
 update: 2019-04-13 20:25:25
 tags:
-    -  LaTeX
-    -  Beamer
+    - LaTeX
+    - Beamer
 categories: 
-    - Summary
+    - Tools
 ---
 
 今天用了 Beamer 做一个 Presentation，花了一点时间在查找各种细节。 Presentation 已经基本完成。于是决定把折腾得到的结果记录一下。

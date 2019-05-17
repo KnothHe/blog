@@ -5,7 +5,7 @@ update: 2019-04-17 16:44:28
 tags:
     - Translation
 categories: 
-    - Introduction
+    - Programming
 ---
 
 这篇博客是从一个计算机图形学的教程的 [common concept](https://gabrielgambetta.com/computer-graphics-from-scratch/common-concepts.html) 中的 color models 小节翻译过来的。我觉得原文的内容对颜色模式的解释详细易懂，就想着以练习翻译的方式翻译了过来。
@@ -32,4 +32,4 @@ categories:
 
 物体是不同的颜色是因为它们以不同的方式吸收和反射光线。让我们从像日光一样的白光开始。白光包含每个光波长。当白光撞击一些物体时，依赖该物体的组成，它的表面吸收一些波长的光而反射其他波长的光。其反射的一些光撞击到我们的眼睛，然后我们的大脑将其装换成颜色。什么颜色？被反射的波长的光的和。
 
-未翻译玩，待续……
+未翻译完，待续……
