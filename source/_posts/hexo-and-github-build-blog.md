@@ -1,7 +1,7 @@
 ---
 title: 使用 Hexo + GitHub 搭建博客
 date: 2019-09-23 09:14:57
-update: 2019-09-23 09:14:57
+updated: 2019-09-26 10:21:47
 tags:
     - Hexo
 categories:
@@ -39,11 +39,11 @@ categories:
 
 3. 安装 Hexo
 
-使用 Npm 安装 Hexo。
+    使用 Npm 安装 Hexo。
 
-```sh
-npm install hexo-cli -g
-```
+    ```sh
+    npm install hexo-cli -g
+    ```
 
 ## 使用 Hexo
 
@@ -74,12 +74,12 @@ hexo s
 
 1. 在你的 GitHub 账户下创建一个仓库用于存放 Hexo 生成的静态文件。GitHub Page 会根据仓库名给定一个对应的域名。假定用户名为 username，规则如下:
 
-    1. 如果仓库名为 username.github.io，则对应的域名为 username.github.io
-    2. 如果是其他名字，如 `theBlogRepository`，则对应的域名为 username.github.io/theblogrepository
+    1. 如果仓库名为 `username.github.io`，则对应的域名为 `username.github.io`
+    2. 如果是其他名字，如 `theBlogRepository`，则对应的域名为 `username.github.io/theblogrepository`
 
-    比如，我的用户名为 knothhe，我存放博客的仓库名为 `blog`，我的博客地址就是 <knothhe.github.io/blog>。
+    比如，我的 GitHub 用户名为 [knothhe](https://github.com/KnothHe)，我存放博客的仓库名为 `blog`，我的博客地址就是 <https://knothhe.github.io/blog>。
 
-　  最后在该仓库的设置页面需要开启 GitHub Page 的选项，默认有 master 分支和 master 分支下的 /docs 文件夹。选择 master 分支即可。
+    最后在该仓库的设置页面需要开启 GitHub Page 的选项，默认有 master 分支和 master 分支下的 /docs 文件夹。选择 master 分支即可。
 
 2. 配置 `_config.yml`
 
