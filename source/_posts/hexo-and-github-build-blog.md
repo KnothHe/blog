@@ -1,7 +1,7 @@
 ---
 title: 使用 Hexo + GitHub 搭建博客
 date: 2019-09-23 09:14:57
-updated: 2019-09-26 10:21:47
+updated: 2019-09-28 21:40:15
 tags:
     - Hexo
 categories:
@@ -10,7 +10,7 @@ categories:
 
 因为不止有一个同学问过我如何借助 GitHub 搭建博客，是决定把搭建博客的整个流程记录下来，
 以供想要自己借助 Hexo 和 GitHub 搭建博客的同学参考。
-我主要使用 Hexo 生成静态站点文件，然后　push 到 GitHub 上借助 GitHub Page 展示静态博客。
+我主要使用 Hexo 生成静态站点文件，然后　push 到 GitHub 上借助 GitHub Pages 展示静态博客。
 
 <!-- more -->
 

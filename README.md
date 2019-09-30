@@ -3,7 +3,7 @@
 ```sh
 npm install hexo-deployer-git --save
 npm install hexo-asset-image --save
-npm install hexo-generator-fedd -save # RSS
+npm install hexo-generator-feed -save # RSS
 ```
 
 # Next theme custom files
