@@ -90,4 +90,5 @@ $$
 
 ## GitHub Actions 测试
 
-测试 GitHub Actions 是否成功。
+- 测试 GitHub Actions 是否成功。
+- 测试手机编辑部署。
