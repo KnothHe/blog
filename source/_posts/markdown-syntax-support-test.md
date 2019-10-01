@@ -12,8 +12,8 @@ Markdown 语法支持的测试博文，有关 Markdown 的语法可参考 [Markd
 
 ### 无序列表
 
-- **粗体** 
-- *斜体* 
+- **粗体**
+- *斜体*
 - ***粗体和斜体***
 
 ### 有序列表
@@ -87,3 +87,7 @@ $$
 ## 源文件
 
 [地址](https://raw.githubusercontent.com/KnothHe/blog/master/source/_posts/markdown-syntax-support-test.md)
+
+## GitHub Actions 测试
+
+测试 GitHub Actions 是否成功。
