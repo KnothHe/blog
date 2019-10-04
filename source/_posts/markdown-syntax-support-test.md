@@ -56,7 +56,7 @@ int main(void) {
 
 [Markdown Guide](https://www.markdownguide.org/basic-syntax)
 
-### 无内容的链接(URLs 和　Email)
+### 无内容的链接(URL 和 Email)
 
 #### URL
 
@@ -88,7 +88,3 @@ $$
 
 [地址](https://raw.githubusercontent.com/KnothHe/blog/master/source/_posts/markdown-syntax-support-test.md)
 
-## GitHub Actions 测试
-
-- 测试 GitHub Actions 是否成功。
-- 测试手机编辑部署。
