@@ -408,7 +408,7 @@ reading_progress:
 bookmark:
   enable: false
   # Customize the color of the bookmark.
-  color: "#fff"
+  color: "#222"
   # If auto, save the reading progress when closing the page or clicking the bookmark-icon.
   # If manual, only save it by clicking the bookmark-icon.
   save: auto
@@ -563,7 +563,7 @@ mediumzoom: false
 
 # Vanilla JavaScript plugin for lazyloading images.
 # For more information: https://github.com/ApoorvSaxena/lozad.js
-lazyload: true
+lazyload: false
 
 # Pangu Support
 # For more information: https://github.com/vinta/pangu.js
