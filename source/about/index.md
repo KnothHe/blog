@@ -6,7 +6,7 @@ updated: 2020-07-14 20:58:42
 
 ## 写在开头
 
-我恍惚觉得自己这 22 年的生活并没有学到任何东西，也并不知道接下来的这几十年我能有什么变化。
+暂时没有人生目标。
 
 ## 关于我
 
@@ -32,3 +32,7 @@ updated: 2020-07-14 20:58:42
 ## 新的桌面截图（Hackintosh）
 
 ![Hackintosh desktop screentshot](./index/hackintosh-desktop-screenshot.png)
+
+## 4K 显示器，以及给显示器配个了黑苹果主机
+
+![4k display with hackintosh screenshot](./index/4k-hackintosh.png)
