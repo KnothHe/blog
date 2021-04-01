@@ -1,7 +1,7 @@
 ---
 title: 使用 Docker 创建 MySQL 实验环境
 date: 2019-09-26 19:42:09
-updated: 2019-09-26 19:42:09
+updated: 2021-04-02 02:30:11
 tags:
     - Docker
     - MySQL
@@ -45,7 +45,7 @@ docker pull mysql
 使用下面的命令运行和配置刚刚拉取的 Docker 镜像：
 
 ```sh
-docker run --name mysql-lab -e MYSQL_ROOT_PASSWORD=password -d mysql
+docker run --name mysql-lab -p 3307:3306 -e MYSQL_ROOT_PASSWORD=password -d mysql
 ```
 
 其中：
@@ -53,6 +53,7 @@ docker run --name mysql-lab -e MYSQL_ROOT_PASSWORD=password -d mysql
 - `--name TEXT` 表示创建的镜像的名称，如果不提供该参数，则 docker 会随机生成一个名称。该示例中创建的名称为 mysql-lab
 - `-e TEXT` 表示提供的环境变量的键值对。此处提供一个名为 MYSQL_ROOT_PASSWORD 的环境变量，其值为 password
 - `-d` 表示在后台运行该容器
+- `-p` 指定容器外端口到容器内端口的映射，3307 为容器外端口，3306 为容器内端口，即 MySQL 默认运行端口。指定后，即可在容器外通过 `localhost` 地址加上 3307 端口连接到容器内的 MySQL。就如同操作本地安装的 MySQL 一样，而不需要进行下方的容器外连接 MySQL 的操作。
 
 ## 检查容器的运行状态
 
@@ -85,7 +86,9 @@ c046b3491396        mysql               "docker-entrypoint.s…"   4 hours ago  
     mysql -u root -p
     ```
 
-- 从容器外连接 MySQL
+    密码为先前设置的 `password`
+
+- ~~从容器外连接 MySQL~~ **可直接指定端口映射从容器外连接 MySQL**
 
     更好的方法是在容器外连接 MySQL。
 
@@ -112,6 +115,8 @@ c046b3491396        mysql               "docker-entrypoint.s…"   4 hours ago  
 1. 下载测试数据
 
     [测试数据地址](https://github.com/datacharmer/test_db)
+
+2. 按照地址中的 `README` 进行操作即可。下方操作只导入了数据库模型，并未导入实际的数据。且指定端口后不再需要类似下方的操作。
 
 1. 进入到下载的测试数据的目录下
 
