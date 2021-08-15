@@ -1,0 +1,729 @@
+<!DOCTYPE html>
+
+
+
+
+
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 3.8.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/blog/images/apple-touch-icon.png?v=7.4.1">
+  <link rel="icon" type="image/png" sizes="32x32" href="/blog/images/favicon-32x32.png?v=7.4.1">
+  <link rel="icon" type="image/png" sizes="16x16" href="/blog/images/favicon-16x16.png?v=7.4.1">
+  <link rel="mask-icon" href="/blog/images/safari_pinned_tab.svg?v=7.4.1" color="#222">
+  <link rel="manifest" href="/blog/images/manifest.json">
+  <meta name="msapplication-config" content="/blog/images/browserconfig.xml">
+  <link rel="alternate" href="/blog/atom.xml" title="~来都来了~" type="application/atom+xml">
+
+<link rel="stylesheet" href="/blog/css/main.css?v=7.4.1">
+
+
+<link rel="stylesheet" href="/blog/lib/font-awesome/css/font-awesome.min.css?v=4.7.0">
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.css">
+
+
+<script id="hexo-configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/blog/',
+    scheme: 'Muse',
+    version: '7.4.1',
+    exturl: false,
+    sidebar: {"position":"right","display":"post","offset":12,"onmobile":false},
+    copycode: {"enable":true,"show_result":true,"style":"mac"},
+    back2top: {"enable":true,"sidebar":false,"scrollpercent":false},
+    bookmark: {"enable":false,"color":"#222","save":"auto"},
+    fancybox: true,
+    mediumzoom: false,
+    lazyload: false,
+    pangu: false,
+    algolia: {
+      appID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    },
+    localsearch: {"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},
+    path: 'search.xml',
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    translation: {
+      copy_button: '复制',
+      copy_success: '复制成功',
+      copy_failure: '复制失败'
+    },
+    sidebarPadding: 40
+  };
+</script>
+
+  <meta name="description" content="一直以来都不能非常清楚地记住浮点数的表示方式，这段时间开始重读 CSAPP 的第二章中浮点数表示的部分，大致上弄清楚了 IEEE 浮点数的表示方式。 简单介绍一下 IEEE 浮点数的表示方式，细节部分可以参考 CSAPP 和 维基">
+<meta name="keywords" content="IEEE 754,Floating Point,CSAPP">
+<meta property="og:type" content="article">
+<meta property="og:title" content="IEEE 浮点数表示">
+<meta property="og:url" content="http://knothhe.github.io/blog/ieee-floating-point-representation/index.html">
+<meta property="og:site_name" content="~来都来了~">
+<meta property="og:description" content="一直以来都不能非常清楚地记住浮点数的表示方式，这段时间开始重读 CSAPP 的第二章中浮点数表示的部分，大致上弄清楚了 IEEE 浮点数的表示方式。 简单介绍一下 IEEE 浮点数的表示方式，细节部分可以参考 CSAPP 和 维基">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:updated_time" content="2021-08-15T04:57:51.233Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="IEEE 浮点数表示">
+<meta name="twitter:description" content="一直以来都不能非常清楚地记住浮点数的表示方式，这段时间开始重读 CSAPP 的第二章中浮点数表示的部分，大致上弄清楚了 IEEE 浮点数的表示方式。 简单介绍一下 IEEE 浮点数的表示方式，细节部分可以参考 CSAPP 和 维基">
+  <link rel="canonical" href="http://knothhe.github.io/blog/ieee-floating-point-representation/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome: false,
+    isPost: true,
+    isPage: false,
+    isArchive: false
+  };
+</script>
+
+  <title>IEEE 浮点数表示 | ~来都来了~</title>
+  
+
+
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .logo,
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-meta">
+
+    <div>
+      <a href="/blog/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">~来都来了~</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+        <h1 class="site-subtitle" itemprop="description">knothhe 的博客</h1>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+</div>
+
+
+<nav class="site-nav">
+  
+  <ul id="menu" class="menu">
+      
+      
+      
+        
+        <li class="menu-item menu-item-home">
+      
+    
+
+    <a href="/blog/" rel="section"><i class="fa fa-fw fa-home"></i>首页</a>
+
+  </li>
+      
+      
+      
+        
+        <li class="menu-item menu-item-archives">
+      
+    
+
+    <a href="/blog/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>归档</a>
+
+  </li>
+      
+      
+      
+        
+        <li class="menu-item menu-item-about">
+      
+    
+
+    <a href="/blog/about/" rel="section"><i class="fa fa-fw fa-user"></i>关于</a>
+
+  </li>
+      
+      
+      
+        
+        <li class="menu-item menu-item-tags">
+      
+    
+
+    <a href="/blog/tags/" rel="section"><i class="fa fa-fw fa-tags"></i>标签</a>
+
+  </li>
+      
+      
+      
+        
+        <li class="menu-item menu-item-categories">
+      
+    
+
+    <a href="/blog/categories/" rel="section"><i class="fa fa-fw fa-th"></i>分类</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a href="javascript:;" class="popup-trigger">
+        
+          <i class="fa fa-search fa-fw"></i>搜索</a>
+      </li>
+    
+  </ul>
+
+    
+
+</nav>
+  <div class="site-search">
+    <div class="popup search-popup">
+    <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocorrect="off" autocapitalize="none" placeholder="搜索..." spellcheck="false" type="text" id="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result"></div>
+
+</div>
+<div class="search-pop-overlay"></div>
+
+  </div>
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+  <a href="https://github.com/knothhe" class="github-corner" title="Follow me on GitHub" aria-label="Follow me on GitHub" rel="noopener" target="_blank"><svg width="80" height="80" viewbox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"/><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"/><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"/></svg></a>
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div class="posts-expand">
+      
+  
+  
+  <article itemscope="" itemtype="http://schema.org/Article" class="post-block " lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://knothhe.github.io/blog/blog/ieee-floating-point-representation/">
+
+    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Guanglai He">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/blog/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="~来都来了~">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">IEEE 浮点数表示<a href="https://github.com/knothhe/blog/tree/master/source/_posts/ieee-floating-point-representation.md" class="post-edit-link" title="编辑" rel="noopener" target="_blank"><i class="fa fa-pencil"></i></a>
+
+          
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              
+                
+              
+
+              <time title="创建时间：2019-05-17 15:52:25" itemprop="dateCreated datePublished" datetime="2019-05-17T15:52:25+08:00">2019-05-17</time>
+            </span>
+          
+            
+
+            
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2021-08-15 12:57:51" itemprop="dateModified" datetime="2021-08-15T12:57:51+08:00">2021-08-15</time>
+              </span>
+            
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing"><a href="/blog/categories/Computer/" itemprop="url" rel="index"><span itemprop="name">Computer</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>一直以来都不能非常清楚地记住浮点数的表示方式，这段时间开始重读 CSAPP 的第二章中浮点数表示的部分，大致上弄清楚了 IEEE 浮点数的表示方式。</p>
+<p>简单介绍一下 IEEE 浮点数的表示方式，细节部分可以参考 CSAPP 和 <a href="https://en.wikipedia.org/wiki/IEEE_754" target="_blank" rel="noopener">维基</a></p>
+<a id="more"></a>
+<h2 id="二进制小数表示"><a href="#二进制小数表示" class="headerlink" title="二进制小数表示"></a>二进制小数表示</h2><p>首先理解一下十进制小数的表示方式，我们以下面这种方式表示十进制小数：</p>
+<p>$$<br>    d_{n}d_{n-1}…d_{1}d_{0}.d_{-1}…d_{m}<br>$$</p>
+<p>表示的值为：</p>
+<p>$$<br>    \sum_{i = m}^{n} 10^{i}d_{i}<br>$$</p>
+<p>类似地，二进制小数的表示方式：</p>
+<p>$$<br>    b_{n}b_{n-1}…b_{1}b_{0}.b_{-1}…b_{m}<br>$$</p>
+<p>$$<br>    \sum_{i = m}^{n} 2^{i}b_{i}<br>$$</p>
+<p>例如二进制小数</p>
+<p>$$<br>11.01_2 = 1 \times 2^{1} + 1 \times 2^{0} + 0 \times 2^{-1} + 1 \times 2^{-2}<br>    = 2 + 1 + 0 + 0.25<br>    = 3.25<br>$$</p>
+<p>现在考虑如何对这种二进制小数进行编码，一种可行的方式是定点小数。即将小数点的位置固定。例如使用 16 位二进制数来编码定点小数。可以做如下规定：</p>
+<ol>
+<li>第 15 位为符号位。</li>
+<li>第 14 ~ 9 位表示小数点前的数</li>
+<li>第 8 ~ 0 位表示小数点后的数</li>
+</ol>
+<p>那么，$11.01$ 可以编码为 $0 000011 010000000$。</p>
+<p>这种表示方式的优点是比较简单，但是能够表示的小数的范围就十分的小。不考虑小数点后的数字，这种方式能够表示的整数范围就只能是 $-2^{6}+1 \sim 2^{6} - 1$。</p>
+<p>于是，考虑到不去固定小数点的位置。而是根据当前的数字来确定小数点的具体位置。这样，就有了一种新的表示小数的方式，即浮点数。以下面这种方式表示（不考虑编码方式）：</p>
+<p>$$<br>    V = (-1)^s \times M \times 2^{E}<br>$$</p>
+<p>其中，$s$ 表示符号位，$E$ 表示阶码，$M$ 表示尾数。</p>
+<p>通过这种方式，就有了 IEEE 754 浮点数规范。其具体定义了浮点数的位级编码规则。</p>
+<h2 id="IEEE-浮点数表示"><a href="#IEEE-浮点数表示" class="headerlink" title="IEEE 浮点数表示"></a>IEEE 浮点数表示</h2><p>首先， IEEE 将浮点数编码为 32 位或者 64 位。其中，32 位的规则如下：</p>
+<ol>
+<li>第 32 位表示符号</li>
+<li>第 31 ~ 23 位表示的值为 $E$，其位级表示记为 $exp$</li>
+<li>第 22 ~ 0 位表示的值 $M$, 其位级表示记为 $frac$</li>
+</ol>
+<p>64 位编码表示中，$exp$ 长度为 11，$frac$ 长度为 52。与 32 位类似。</p>
+<p>根据 $exp$ 和 $frac$ 的表示的不同，IEEE 浮点数规范将浮点数分为 4 类：</p>
+<ol>
+<li>规格化数： $exp$ 不为全 0 和全 1</li>
+<li>非规格化数： $exp$ 为全 0</li>
+<li>无穷大： $exp$ 为全 1 且 $frac$ 为全 0</li>
+<li>$NAN$： $exp$ 为全 1 且 $frac$ 不为全 0</li>
+</ol>
+<h3 id="规格化数"><a href="#规格化数" class="headerlink" title="规格化数"></a>规格化数</h3><p>首先 $E = e - Bias$, 其中 $e$ 为 $exp$ 所表示的无符号数。$Bias$ 的值为 $2^{k-1}-1$，$k$ 为 $frac$ 部分的长度。例如，32 位编码时 $k$ 的值为 $8$，于是 $Bias$ 的值为 $127$，最终， $E$ 的范围为 $-126 \sim 127$。</p>
+<p>其次 $M = 1 + f$，其中 $f$ 为 $0.f_{n}f_{n-1}…f_{0}$ 所表示的值。这里，通过将 $f$ 加 1 获得了一个额外的表示精度位。</p>
+<h3 id="非规格化数"><a href="#非规格化数" class="headerlink" title="非规格化数"></a>非规格化数</h3><p>其 $E = 1 - Bias$，而 $M = f$。</p>
+<p>根据该定义，当 $frac$ 为全 0 时， $M = 0$。于是：</p>
+<p>$$<br>    V = (-1)^s \times E \times 0 = 0<br>$$</p>
+<p>根据 $s$ 的值的不同，得到了表示 0 的两种方式，记为 $+0$ 和 $-0$。</p>
+<h3 id="无穷大"><a href="#无穷大" class="headerlink" title="无穷大"></a>无穷大</h3><p>根据符号位分为 $+\infty$ 和 $-\infty$。</p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>一般来说，非规格化数用于表示 $0$ 和非常接近 $0$ 的数。而相对其他能正常表示的数则用规格化数表示，溢出的值则用无穷大表示。当溢出的小数部分为非 $0$ 即可用 $NAN$（Not A Number)表示。当一些运算的结果不是实数或者无穷时，就会返回 $NAN$，比如 $\sqrt{-1}$。</p>
+<h2 id="写在最后"><a href="#写在最后" class="headerlink" title="写在最后"></a>写在最后</h2><p>写技术文章需要严谨、正确，可能我比没有做到。所有如果有疑惑的话，可以学习一下 CSAPP 中和此有关的内容。</p>
+<!-- 我后悔写这篇博客了，描述好一个规范并不是一件容易的事。想要讲的正确且生动就更加不容易了。但是因为已经写了，于是还是决定放出来。以后如果再打算写类似的博客一定会仔细考虑考虑。
+
+而且，实际上 CSAPP 上的这一小节讲述的已经足够清楚了。 -->
+    </div>
+
+    
+    
+    
+      
+
+        
+      
+        
+
+<div>
+<ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>本文作者： </strong>Guanglai He</li>
+  <li class="post-copyright-link">
+    <strong>本文链接：</strong>
+    <a href="http://knothhe.github.io/blog/ieee-floating-point-representation/" title="IEEE 浮点数表示">http://knothhe.github.io/blog/ieee-floating-point-representation/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fa fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！</li>
+</ul>
+</div>
+
+      
+
+      <footer class="post-footer">
+          
+            
+          
+          <div class="post-tags">
+            
+              <a href="/blog/tags/IEEE-754/" rel="tag"># IEEE 754</a>
+            
+              <a href="/blog/tags/Floating-Point/" rel="tag"># Floating Point</a>
+            
+              <a href="/blog/tags/CSAPP/" rel="tag"># CSAPP</a>
+            
+          </div>
+        
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-next post-nav-item">
+              
+                <a href="/blog/interview-first-time/" rel="next" title="初次笔试题">
+                  <i class="fa fa-chevron-left"></i> 初次笔试题
+                </a>
+              
+            </div>
+
+            <span class="post-nav-divider"></span>
+
+            <div class="post-nav-prev post-nav-item">
+              
+                <a href="/blog/vscode-linux-debugger-launch/" rel="prev" title="Linux 下 VS Code 的 C/C++ 调试器使用">
+                  Linux 下 VS Code 的 C/C++ 调试器使用 <i class="fa fa-chevron-right"></i>
+                </a>
+              
+            </div>
+          </div>
+        
+      </footer>
+    
+  </article>
+  
+  
+  
+
+  </div>
+
+
+          </div>
+          
+    
+    <div class="comments" id="gitalk-container"></div>
+  
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+        
+        
+        
+        
+      
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#二进制小数表示"><span class="nav-number">1.</span> <span class="nav-text">二进制小数表示</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#IEEE-浮点数表示"><span class="nav-number">2.</span> <span class="nav-text">IEEE 浮点数表示</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#规格化数"><span class="nav-number">2.1.</span> <span class="nav-text">规格化数</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#非规格化数"><span class="nav-number">2.2.</span> <span class="nav-text">非规格化数</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#无穷大"><span class="nav-number">2.3.</span> <span class="nav-text">无穷大</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#总结"><span class="nav-number">3.</span> <span class="nav-text">总结</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#写在最后"><span class="nav-number">4.</span> <span class="nav-text">写在最后</span></a></li></ol></div>
+        
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">Guanglai He</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        
+          <a href="/blog/archives/">
+        
+          <span class="site-state-item-count">10</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+    
+      
+      
+      <div class="site-state-item site-state-categories">
+        
+          
+            <a href="/blog/categories/">
+          
+        
+        <span class="site-state-item-count">3</span>
+        <span class="site-state-item-name">分类</span>
+        </a>
+      </div>
+    
+      
+      
+      <div class="site-state-item site-state-tags">
+        
+          
+            <a href="/blog/tags/">
+          
+        
+        <span class="site-state-item-count">21</span>
+        <span class="site-state-item-name">标签</span>
+        </a>
+      </div>
+    
+  </nav>
+</div>
+  <div class="feed-link motion-element">
+    <a href="/blog/atom.xml" rel="alternate">
+      <i class="fa fa-rss"></i>RSS
+    </a>
+  </div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+      
+      
+        
+      
+      
+        
+      
+        <a href="https://github.com/knothhe" title="GitHub &rarr; https://github.com/knothhe" rel="noopener" target="_blank"><i class="fa fa-fw fa-github"></i>GitHub</a>
+      </span>
+    
+      <span class="links-of-author-item">
+      
+      
+        
+      
+      
+        
+      
+        <a href="mailto:guanglaihe@gmail.com" title="E-Mail &rarr; mailto:guanglaihe@gmail.com" rel="noopener" target="_blank"><i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+      </span>
+    
+  </div>
+  <div class="cc-license motion-element" itemprop="license">
+    
+  
+    <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" class="cc-opacity" rel="noopener" target="_blank"><img src="/blog/images/cc-by-nc-sa.svg" alt="Creative Commons"></a>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; 2019 – <span itemprop="copyrightYear">2021</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Guanglai He</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io" class="theme-link" rel="noopener" target="_blank">Hexo</a> 强力驱动 v3.8.0</div>
+  <span class="post-meta-divider">|</span>
+  <div class="theme-info">主题 – <a href="https://theme-next.org" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a> v7.4.1</div>
+
+        
+
+
+
+
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/blog/lib/anime.min.js?v=3.1.0"></script>
+  <script src="//cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js"></script>
+  <script src="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.js"></script>
+  <script src="/blog/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  <script src="/blog/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+<script src="/blog/js/utils.js?v=7.4.1"></script><script src="/blog/js/motion.js?v=7.4.1"></script>
+<script src="/blog/js/schemes/muse.js?v=7.4.1"></script>
+<script src="/blog/js/next-boot.js?v=7.4.1"></script>
+
+
+
+  
+
+
+
+
+
+
+
+
+  <script src="/blog/js/local-search.js?v=7.4.1"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+    
+      
+<script type="text/x-mathjax-config">
+
+  MathJax.Hub.Config({
+    tex2jax: {
+      inlineMath: [ ['$', '$'], ['\\(', '\\)'] ],
+      processEscapes: true,
+      skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    },
+    TeX: {
+      equationNumbers: {
+        autoNumber: 'AMS'
+      }
+    }
+  });
+
+  MathJax.Hub.Register.StartupHook('TeX Jax Ready', function() {
+    MathJax.InputJax.TeX.prefilterHooks.Add(function(data) {
+      if (data.display) {
+        var next = data.script.nextSibling;
+        while (next && next.nodeName.toLowerCase() === '#text') {
+          next = next.nextSibling;
+        }
+        if (next && next.nodeName.toLowerCase() === 'br') {
+          next.parentNode.removeChild(next);
+        }
+      }
+    });
+  });
+
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for (i = 0; i < all.length; i += 1) {
+      element = document.getElementById(all[i].inputID + '-Frame').parentNode;
+      if (element.nodeName.toLowerCase() == 'li') {
+        element = element.parentNode;
+      }
+      element.classList.add('has-jax');
+    }
+  });
+</script>
+<script>
+  NexT.utils.getScript('//cdn.jsdelivr.net/npm/mathjax@2/MathJax.js?config=TeX-AMS-MML_HTMLorMML', () => {
+    MathJax.Hub.Typeset();
+  }, window.MathJax);
+</script>
+
+    
+  
+
+  
+
+  
+
+<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.css">
+
+<script>
+  NexT.utils.getScript('//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js', () => {
+    var gitalk = new Gitalk({
+      clientID: '9364fae4a7f7cac8e983',
+      clientSecret: '62b76bb79e129d95c1d344862744e4b0c2037a07',
+      repo: 'blog',
+      owner: 'knothhe',
+      admin: ['knothhe'],
+      id: '1c7d02ed8c35c1af66ab5794ee228ead',
+        language: window.navigator.language || window.navigator.userLanguage,
+      
+      distractionFreeMode: 'true'
+    });
+    gitalk.render('gitalk-container');
+  }, window.Gitalk);
+</script>
+
+</body>
+</html>
